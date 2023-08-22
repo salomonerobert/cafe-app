@@ -1,0 +1,22 @@
+{
+  "name": "cafe_app",
+  "version": "1.0.0",
+  "description": "web app to manage cafes and employees",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "npm run test",
+    "start": "node index.js",
+    "watch": "nodemon --inspect index.js"
+  },
+  "author": "Salomone",
+  "license": "ISC",
+  "dependencies": {
+    "@faker-js/faker": "^8.0.2",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "mongoose": "^7.4.3",
+    "nodemon": "^3.0.1",
+    "rosie": "^2.1.0"
+  }
+}
