@@ -37,7 +37,7 @@ export async function updateExistingCafe(cafeId, cafeDetails) {
 
 export async function deleteExistingCafe(cafeId) {
     try {
-        const cafe = await Cafe.findOneAndDelete({id: cafeId});
+        const cafe = await Cafe.findOneAndDelete({_id: cafeId});
         return cafe;
     } catch (error) {
         console.log('Error while deleting cafe by id' + error);

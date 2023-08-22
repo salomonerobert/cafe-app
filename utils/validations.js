@@ -1,7 +1,7 @@
 export function validateCafeForUpdate(cafeForUpdate) {
   const errors = [];
 
-  if (!cafeForUpdate.id) {
+  if (!cafeForUpdate._id) {
     errors.push('id is required.');
   }
 

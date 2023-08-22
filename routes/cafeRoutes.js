@@ -13,7 +13,7 @@ cafeRouter.get('/', async (req, res) => {
 
     const result = await Promise.all(
       cafes.map(async cafe => {
-        const employeeCount = await getEmployeeCount(cafe.id);
+        const employeeCount = await getEmployeeCount(cafe._id);
         return {
           ...cafe,
           employees: employeeCount
@@ -32,7 +32,7 @@ cafeRouter.get('/', async (req, res) => {
 // POST /cafe
 cafeRouter.post('/', async (req, res) => {
   try {
-    const cafe = addNewCafe(req.body)
+    const cafe = addNewCafe(req.body.cafe)
     if (!cafe.error) {
         res.status(201).json(cafe);
     } else {
@@ -46,12 +46,15 @@ cafeRouter.post('/', async (req, res) => {
 // PUT /cafe
 cafeRouter.put('/', async (req, res) => {
   try {
-    const cafeId = req.body.id;
-    const cafeForUpdate = req.body;
-    if (!cafeId || !validateCafeForUpdate(cafeForUpdate)) res.status(400).json({error: "Invalid cafeId or cafe object"});
+    const cafeId = req.body.cafe._id;
+    const cafeForUpdate = req.body.cafe;
+    if (!cafeId || !validateCafeForUpdate(cafeForUpdate)) {
+        res.status(400).json({error: "Invalid cafeId or cafe object"});
+        return;
+    }
 
-    const cafe = await updateExistingCafe(req.body.id, req.body);
-    if (cafe.error === 'Cafe not found') return res.status(404).json({ error: 'Cafe not found' });
+    const cafe = await updateExistingCafe(cafeId, cafeForUpdate);
+    if (cafe.error === 'Cafe not found') return res.status(404).json({ error: cafe.error });
     res.json(cafe);
   } catch (err) {
     res.status(400).json({ error: err.message });
@@ -67,7 +70,7 @@ cafeRouter.delete('/', async (req, res) => {
     if (!deletedCafe) return res.status(404).json({ error: 'Cafe not found' });
 
     // Delete all employees under the deleted cafe
-    const employeesDeleted = deleteAllEmployeesByCafe(cafeId);
+    const employeesDeleted = await deleteAllEmployeesByCafe(cafeId);
     
     employeesDeleted ? res.json({ message: 'Cafe deleted successfully' }) : res.status(400).json({ error: 'Unsuccessful deletion operation' })
   } catch (err) {
