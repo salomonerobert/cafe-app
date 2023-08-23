@@ -1,7 +1,7 @@
-export function validateCafeForUpdate(cafeForUpdate) {
+export function validateCafeForUpdate(cafeForUpdate, updateCafe = true) {
   const errors = [];
 
-  if (!cafeForUpdate._id) {
+  if (!cafeForUpdate._id && updateCafe) {
     errors.push('id is required.');
   }
 
@@ -17,13 +17,17 @@ export function validateCafeForUpdate(cafeForUpdate) {
     errors.push('location is required.');
   }
 
+  if (!cafeForUpdate.logo || typeof cafeForUpdate.logo !== 'string') {
+    errors.push('logo is missing or of incorrect format.');
+  }
+
   return errors.length === 0;
 }
 
-export function validateEmployeeRequestBody(employee) {
+export function validateEmployeeRequestBody(employee, updateEmployee = true) {
   const errors = [];
 
-  if (!employee.employee_id || !/^UI[0-9A-Za-z]{7}$/.test(employee.employee_id)) {
+  if ((!employee.employee_id || !/^UI[0-9A-Za-z]{7}$/.test(employee.employee_id)) && updateEmployee) {
     errors.push('employee_id is required and must match the pattern /^UI[0-9A-Za-z]{7}$/');
   }
 
@@ -41,10 +45,6 @@ export function validateEmployeeRequestBody(employee) {
 
   if (!employee.gender || !['Male', 'Female'].includes(employee.gender)) {
     errors.push('gender is required and must be one of "Male" or "Female"');
-  }
-
-  if (!employee.cafe || typeof employee.cafe !== 'string') {
-    errors.push('cafe is required and must be a valid ObjectId');
   }
 
   if (employee.start_date && isNaN(Date.parse(employee.start_date))) {

@@ -19,6 +19,16 @@ export async function getEmployeesByCafe(cafeId) {
   }
 }
 
+export async function getEmployeeById(employee_id) {
+    try {
+      const employees = await Employee.find({employee_id});
+      return employees.map(employee => employee._doc);
+    } catch (error) {
+      console.log("Error while finding employees by cafe id: " + error);
+      throw error;
+    }
+  }
+
 export async function deleteAllEmployeesByCafe(cafeId) {
   const cafeObjectId = new mongoose.Types.ObjectId(cafeId);
   try {
@@ -36,7 +46,9 @@ export async function addEmployeeToCafe(employee) {
     const employeeExists = await Employee.find({
       employee_id: employeeObject.employee_id,
     });
+
     let savedEmployee = null;
+    
     if (employeeExists.length === 0) {
       try {
         savedEmployee = await employeeObject.save();

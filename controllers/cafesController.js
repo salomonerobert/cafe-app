@@ -25,12 +25,15 @@ export async function addNewCafe(cafeDetails) {
 
 export async function updateExistingCafe(cafeId, cafeDetails) {
     try {
-        const cafe = new Cafe(cafeDetails);
-        const updatedCafe = await Cafe.findByIdAndUpdate(cafeId, cafe, { new: true });
+        const updatedCafe = await Cafe.findByIdAndUpdate(cafeId, cafeDetails, { new: true });
 
-        return updatedCafe ?? { error: 'Cafe not found' }
+        if (!updatedCafe) {
+            throw new Error('Cafe not found for ID: ' + cafeId);
+        }
+
+        return updatedCafe;
     } catch (error) {
-        console.log('Error occurred while updating existing cafe' + error);
+        console.error(`Error occurred while updating cafe with ID ${cafeId}: ${error.message}`);
         throw error;
     }
 }
@@ -40,7 +43,7 @@ export async function deleteExistingCafe(cafeId) {
         const cafe = await Cafe.findOneAndDelete({_id: cafeId});
         return cafe;
     } catch (error) {
-        console.log('Error while deleting cafe by id' + error);
+        console.error(`Error while deleting cafe by ID ${cafeId}: ` + error.message);
         throw error;
     }
 }

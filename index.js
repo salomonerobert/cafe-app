@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 import cafeRouter from './routes/cafeRoutes.js';
 import employeeRouter from './routes/employeeRoutes.js';
 import dotenv from 'dotenv';
+import cors from 'cors';
 
 dotenv.config();
 
@@ -19,6 +20,8 @@ mongoose.connect(`mongodb+srv://${MONGO_USER}:${MONGO_PW}@cafeapp.i42jdqh.mongod
 })
 .then(() => console.log('Connected to MongoDB'))
 .catch(err => console.error('Could not connect to MongoDB:', err));
+
+app.use(cors());
 
 // Middleware to parse JSON requests
 app.use(express.json());
